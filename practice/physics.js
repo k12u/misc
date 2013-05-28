@@ -8,7 +8,7 @@ function createMovingObject(spec) {
     var acceleration = 2;
     var velocity = 0;
     var restitution = spec.restitution;
-    var friction = 0.995;
+    var friction = 0.99;
 
     MovingObject.move = function(){
         velocity += acceleration;
@@ -20,13 +20,13 @@ function createMovingObject(spec) {
             velocity = -velocity * restitution;
         }
         //console.log("position: " + position + ", velocity: " + velocity);
-        MovingObject.q.css("top", position + 5 + "px");
+        MovingObject.q.css("top", position + prefix + "px");
 
     };
 
     MovingObject.q = $(document.createElement('div'));
-    MovingObject.q.css("color", "red")
-        .css("background-color", "red")
+    MovingObject.q
+        .css("background-color", "#ff8800")
         .css("position", "absolute")
         .css("top", prefix + "px")
         .css("left", spec.left + "px")
@@ -41,7 +41,7 @@ function createMovingObject(spec) {
 function createGround() {
     var element = $(document.createElement('div'));
     element
-        .css("background-color", "black")
+        .css("background-color", "#88e02e")
         .css("position", "absolute")
         .css("width", "250px")
         .css("height", "10px")
