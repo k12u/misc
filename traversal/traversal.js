@@ -4,9 +4,7 @@ var unit = 30;
 var linespec = [4, 4, 18, 14];
 
 function createField(line) {
-    var field = $(document.createElement('div'));
-    field.css("z-index", 0);
-    field.css("opacity", 0.5);
+    var field = $('div');
     for (var i = 0; i < WIDTH; i++) {
         var row = $(document.createElement('div'));
         field.append(row);
@@ -20,7 +18,8 @@ function createField(line) {
             var cell = $(document.createElement('div'));
             cell
                 //.text(i+":"+j)
-                .css("background-color", online ? "#cccc00" : ((i+j) % 2 == 0) ? "#88e02e" : "#44c02e")
+                .css("background-color", online ? "#cccc00"
+                     : ((i+j) % 2 == 0) ? "#88e02e" : "#44c02e")
                 .css("position", "absolute")
                 .css("top", j * unit + "px")
                 .css("left", i * unit + "px")
@@ -90,25 +89,15 @@ function addcanvasline(canvas, linespec) {
     ctx.beginPath();
 
     ctx.moveTo(0,0);
-    ctx.moveTo(0.5*(linespec[0]*unit+unit/2), 0.25*(linespec[1]*unit+unit/2));
-    console.log(0.5*(linespec[0]*unit+unit/2));
-    console.log(linespec[1]*unit+unit/2);
-    ctx.lineTo(0.5*(linespec[3]*unit+unit/2), 0.25*(linespec[2]*unit+unit/2));
-    console.log(linespec[2]*unit+unit/2);
-    console.log(linespec[3]*unit+unit/2);
+    ctx.moveTo(linespec[0]*unit+unit/2, linespec[1]*unit+unit/2);
+    ctx.lineTo(linespec[3]*unit+unit/2, linespec[2]*unit+unit/2);
     ctx.closePath();
 
     ctx.stroke();
 }
 
 var field = createField(linedata);
-var linecanvas = $(document.createElement('canvas'))
-    .css("position", "absolute")
-    .css("top", 0)
-    .css("left", 0)
-    .css("z-index", 1)
-    .css("width", unit*WIDTH)
-    .css("height", unit*HEIGHT)[0];
+var linecanvas = $("canvas")[0];
 $("body").append(linecanvas);
 addcanvasline(linecanvas, linespec);
 $("body").append(field);
