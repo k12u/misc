@@ -1,7 +1,8 @@
 var WIDTH = 20;
 var HEIGHT = 20;
 var unit = 30;
-var linespec = [4, 4, 18, 14];
+//var linespec = [2, 10, 13, 2];
+var linespec = [2, 2, 13, 10];
 
 function createField(line) {
     var field = $('div');
@@ -52,7 +53,7 @@ function line(linespec) {
     if (dx >= dy) {
         console.log("1");
         err_prev = err = dx;
-        for (i=0 ; i < dx ; i++){
+        for (var i=0 ; i < dx ; i++){
             x += sx;
             err += dy2;
             if (err > dx2) {
@@ -63,7 +64,6 @@ function line(linespec) {
                 else if (err + err_prev > dx2)
                     arr.push([y, x-sx]);
                 else {
-                    arr.push([y-sy, x]);
                     arr.push([y, x-sx]);
                 }
             }
@@ -71,6 +71,25 @@ function line(linespec) {
         }
     } else {
         console.log("2");
+        err_prev = err = dy;
+        for (var i=0 ; i < dy ; i++){
+            y += sy;
+            err += dx2;
+            if (err > dy2) {
+                x += sx;
+                err -= dy2;
+                if (err + err_prev < dy2)
+                    arr.push([y, x-sx]);
+                else if (err + err_prev > dy2)
+                    arr.push([y-sy, x]);
+                else {
+                    arr.push([y, x-sx]);
+                    arr.push([y-sy, x]);
+                }
+            }
+            arr.push([y, x]);
+            err_prev = err;
+        }
     }
     return arr;
 }
