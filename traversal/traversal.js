@@ -1,7 +1,6 @@
-var WIDTH = 10;
-var HEIGHT = 10;
-var unit = 60;
-var ball = [8,5];
+var WIDTH = 20;
+var HEIGHT = 20;
+var unit = 30;
 
 function createField(line) {
     var field = $(document.createElement('div'));
@@ -17,7 +16,7 @@ function createField(line) {
             }
             var cell = $(document.createElement('div'));
             cell
-                .text(i+":"+j)
+                //.text(i+":"+j)
                 .css("background-color", online ? "#cccc00" : ((i+j) % 2 == 0) ? "#88e02e" : "#44c02e")
                 .css("position", "absolute")
                 .css("top", j * unit + "px")
@@ -31,31 +30,50 @@ function createField(line) {
     return field;
 }
 
-function line(x0, y0, x1, y1){
+function line(x0, y0, x1, y1) {
     var dx = Math.abs(x1-x0);
     var dy = Math.abs(y1-y0);
     var sx = (x0 < x1) ? 1 : -1;
     var sy = (y0 < y1) ? 1 : -1;
-    var err = dx-dy;
+    var err = dx - dy;
+    var err_prev;
+    var dx2 = dx * 2;
+    var dy2 = dy * 2;
+    var x = 1, y = 1;
 
     var arr = [];
-    while(true){
-        arr.push([x0, y0]);
-        //setPixel(x0,y0);  // Do what you need to for this
-
-        if ((x0==x1) && (y0==y1)) break;
-        var e2 = 2*err;
-        if (e2 >-dy){ err -= dy; x0  += sx; }
-        if (e2 < dx){ err += dx; y0  += sy; }
+    if (dx >= dy) {
+        console.log("1");
+        err_prev = err = dx;
+        for (i=0 ; i < dx ; i++){
+            x += sx;
+            err += dy2;
+            if (err > dx2) {
+                y += sy;
+                err -= dx2;
+                if (err + err_prev < dx2)
+                    arr.push([y-sy, x]);
+                else if (err + err_prev > dx2)
+                    arr.push([y, x-sx]);
+                else {
+                    arr.push([y-sy, x]);
+                    arr.push([y, x-sx]);
+                }
+            }
+            arr.push([y, x]);
+        }
+    } else {
+        console.log("2");
     }
     return arr;
 }
 
-var linedata = line(0, 0, 1, 8);
+var linedata = line(0, 0, 14, 11);
 
 console.log("time: " + new Date().getTime());
-for (var i = 0; i < 100; i++) {
-    line(0, 0, 1, 8);
+
+for (var l = 0; l < 10; l++) {
+    line(0, 0, 14, 11);
 }
 console.log("time: " + new Date().getTime());
 
