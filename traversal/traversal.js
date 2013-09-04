@@ -1,9 +1,12 @@
 var WIDTH = 20;
 var HEIGHT = 20;
 var unit = 30;
+var linespec = [4, 4, 18, 14];
 
 function createField(line) {
     var field = $(document.createElement('div'));
+    field.css("z-index", 0);
+    field.css("opacity", 0.5);
     for (var i = 0; i < WIDTH; i++) {
         var row = $(document.createElement('div'));
         field.append(row);
@@ -30,7 +33,12 @@ function createField(line) {
     return field;
 }
 
-function line(x0, y0, x1, y1) {
+function line(linespec) {
+    var x0 = linespec[0];
+    var y0 = linespec[1];
+    var x1 = linespec[2];
+    var y1 = linespec[3];
+
     var dx = Math.abs(x1-x0);
     var dy = Math.abs(y1-y0);
     var sx = (x0 < x1) ? 1 : -1;
@@ -39,9 +47,9 @@ function line(x0, y0, x1, y1) {
     var err_prev;
     var dx2 = dx * 2;
     var dy2 = dy * 2;
-    var x = 1, y = 1;
+    var x = x0, y = y0;
 
-    var arr = [];
+    var arr = [[x0, y0]];
     if (dx >= dy) {
         console.log("1");
         err_prev = err = dx;
@@ -68,14 +76,39 @@ function line(x0, y0, x1, y1) {
     return arr;
 }
 
-var linedata = line(0, 0, 14, 11);
+var linedata = line(linespec);
 
 console.log("time: " + new Date().getTime());
 
 for (var l = 0; l < 10; l++) {
-    line(0, 0, 14, 11);
+    line(linespec);
 }
 console.log("time: " + new Date().getTime());
 
+function addcanvasline(canvas, linespec) {
+    var ctx = canvas.getContext('2d');
+    ctx.beginPath();
+
+    ctx.moveTo(0,0);
+    ctx.moveTo(0.5*(linespec[0]*unit+unit/2), 0.25*(linespec[1]*unit+unit/2));
+    console.log(0.5*(linespec[0]*unit+unit/2));
+    console.log(linespec[1]*unit+unit/2);
+    ctx.lineTo(0.5*(linespec[3]*unit+unit/2), 0.25*(linespec[2]*unit+unit/2));
+    console.log(linespec[2]*unit+unit/2);
+    console.log(linespec[3]*unit+unit/2);
+    ctx.closePath();
+
+    ctx.stroke();
+}
+
 var field = createField(linedata);
+var linecanvas = $(document.createElement('canvas'))
+    .css("position", "absolute")
+    .css("top", 0)
+    .css("left", 0)
+    .css("z-index", 1)
+    .css("width", unit*WIDTH)
+    .css("height", unit*HEIGHT)[0];
+$("body").append(linecanvas);
+addcanvasline(linecanvas, linespec);
 $("body").append(field);
